@@ -6,6 +6,8 @@ const cors = require('cors');
 const passport = require('passport');
 const config = require('./config/database');
 
+//mongoose.Promise = require('bluebird');
+
 
 const app = express(config.database);
 
@@ -26,9 +28,15 @@ mongoose.connection.on('error', (err) => {
 
 //CORS Middleware
 app.use(cors())
-
+   
 //BodyParser Middleware
 app.use(bodyParser.json());
+
+//Passport middleware
+app.use(passport.authenticate());
+app.use(passport.session());
+
+require('./config/passport')(passport);
 
 //Set Static folder that is the front end
 app.use(express.static(path.join(__dirname, 'public')));
